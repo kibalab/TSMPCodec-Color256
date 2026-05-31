@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.kibalab.tsmp.codec.color256": {
+      "version": "file:com.kibalab.tsmp.codec.color256",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.kibalab.tsmp.core": ">=0.0.1",
+        "com.vrchat.worlds": "3.9.0"
+      }
+    },
     "com.unity.ai.navigation": {
       "version": "1.1.5",
       "depth": 0,
@@ -88,20 +97,6 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
-    },
-    "com.vrchat.core.bootstrap": {
-      "version": "file:com.vrchat.core.bootstrap",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.2"
-      }
-    },
-    "com.vrchat.demo-template": {
-      "version": "file:com.vrchat.demo-template",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
