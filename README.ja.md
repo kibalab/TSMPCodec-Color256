@@ -2,44 +2,43 @@
 
 # TSMP Codec Color256
 
-TSMP の Color256 コーデック パッケージです。
+Color256 は制限された色セットを TSMP シンボルとして使用して payload を記録する codec です。Luma4 より高い密度を提供しつつ、高密度 RGB codec よりシンボル判定を明確にしやすい構成です。
 
-このパッケージは TSMP Core と一緒に使用します。`TSMPSetup` の Codec タブで自動検出される Color256 codec handler、decode shader、material、prefab、catalog asset を提供します。
+## 特徴
+
+- 256-color 系 TSMP シンボル
+- Luma4 より高い payload 密度
+- standard、robust、refine デコード shader を含む
+- 強い色圧縮や後処理がないストリーム経路に適合
+- `TSMPSetup` の Codec タブで自動検出
+
+## 要件
+
+- TSMP Core: https://github.com/kibalab/TSMP-Core
+- `com.kibalab.tsmp.core` 0.0.1 以降
+- VRChat Worlds SDK 3.9.0 以降
 
 ## インストール
 
-VRChat Creator Companion に VPM リポジトリを追加します。
+VRChat Creator Companion で VPM リポジトリを追加します。
 
 ```text
 https://vpm.kiba.red/
 ```
 
-その後、`TSMP Codec Color256` パッケージをインストールします。
-
-## 要件
-
-- `com.kibalab.tsmp.core` 0.0.1 以降
-- VRChat Worlds SDK 3.9.0 以降
+その後、`TSMP Core` と `TSMP Codec Color256` をインストールします。
 
 ## 使い方
 
-1. TSMP Core の `TSMPController.prefab`、または同等の TSMP 構成をシーンに追加します。
-2. `TSMPSetup` の Codec タブを開きます。
-3. `Refresh Codecs` を押します。
-4. `Color256` が一覧に表示されていることを確認して選択します。
-5. `Apply Setup` を実行します。
+1. Core パッケージの `Packages/com.kibalab.tsmp.core/Samples/TSMPController.prefab` をシーンに配置します。
+2. `TSMPSetup` の Codec タブで `Refresh Codecs` を押します。
+3. `Color256` を選択します。
+4. `Apply Setup` を実行します。
 
-Color256 は Luma4 より高い色容量を提供するコーデックです。より多くの payload を入れたい場合や、より高い表示/デコード負荷を許容できる場合に使用します。
+## リリース状態
 
-## リリース
+このパッケージは beta 段階で、`v0.0.x-beta.x` 形式のタグを使用します。
 
-このリポジトリは、バージョンタグを push すると GitHub Actions が release artifact を作成し、VPM backend にパッケージを登録するように設定されています。
+## ライセンス
 
-タグ名は `package.json` の `version` と一致している必要があります。
-
-例:
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
+MIT License. Copyright (c) 2026 KIBA_Labs.

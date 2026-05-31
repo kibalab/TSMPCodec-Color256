@@ -1,5 +1,6 @@
 # Changelog
 
-## 1.0.0
+## 0.0.3-beta.1
 
-- Initial public package release.
+- Beta release metadata for VPM distribution.
+- Includes Color256 codec runtime, shaders, materials, prefab, and sample.

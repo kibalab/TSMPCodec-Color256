@@ -2,9 +2,21 @@
 
 # TSMP Codec Color256
 
-Color256 codec package for TSMP.
+Color256 records payload using a constrained color set as TSMP symbols. It provides higher density than Luma4 while keeping symbol decisions more explicit than high-density RGB codecs.
 
-This package is used with TSMP Core and provides the Color256 codec handler, decode shaders, materials, prefab, and codec catalog asset discovered by the Codec tab in `TSMPSetup`.
+## Characteristics
+
+- 256-color TSMP symbols
+- Higher payload density than Luma4
+- Standard, robust, and refine decode shaders
+- Best for stream paths without heavy color compression or post-processing
+- Automatically discovered in the `TSMPSetup` Codec tab
+
+## Requirements
+
+- TSMP Core: https://github.com/kibalab/TSMP-Core
+- `com.kibalab.tsmp.core` 0.0.1 or newer
+- VRChat Worlds SDK 3.9.0 or newer
 
 ## Installation
 
@@ -14,32 +26,19 @@ Add the VPM repository in VRChat Creator Companion.
 https://vpm.kiba.red/
 ```
 
-Then install `TSMP Codec Color256`.
-
-## Requirements
-
-- `com.kibalab.tsmp.core` 0.0.1 or newer
-- VRChat Worlds SDK 3.9.0 or newer
+Then install `TSMP Core` and `TSMP Codec Color256`.
 
 ## Usage
 
-1. Add the TSMP Core `TSMPController.prefab` or an equivalent TSMP setup to the scene.
-2. Open the Codec tab on `TSMPSetup`.
-3. Press `Refresh Codecs`.
-4. Confirm that `Color256` appears and select it.
-5. Run `Apply Setup`.
+1. Add `Packages/com.kibalab.tsmp.core/Samples/TSMPController.prefab` from the Core package to your scene.
+2. Open the Codec tab in `TSMPSetup` and click `Refresh Codecs`.
+3. Select `Color256`.
+4. Click `Apply Setup`.
 
-Color256 provides higher color capacity than Luma4 at a higher visual and decode cost.
+## Release Status
 
-## Release
+This package is currently beta and uses `v0.0.x-beta.x` tags.
 
-This repository is configured so pushing a version tag creates release artifacts and registers the package with the VPM backend.
+## License
 
-The tag must match the `version` in `package.json`.
-
-Example:
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
+MIT License. Copyright (c) 2026 KIBA_Labs.
