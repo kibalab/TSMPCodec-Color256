@@ -30,7 +30,7 @@ Shader "Hidden/TSMP/Decode Color256 Robust Refine Bytes"
             #pragma target 3.5
             #pragma vertex vert
             #pragma fragment frag
-            #include "../../../com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeCommon.cginc"
+            #include "Packages/com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeCommon.cginc"
 
             float _ColorCalibrationStartBlock;
             float _InterleaveMode;
@@ -154,7 +154,7 @@ Shader "Hidden/TSMP/Decode Color256 Robust Refine Bytes"
                 return RefineLocalColor256(rgb, r, g, b);
             }
 
-            #include "../../../com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeByteOutput.cginc"
+            #include "Packages/com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeByteOutput.cginc"
             ENDCG
         }
     }
