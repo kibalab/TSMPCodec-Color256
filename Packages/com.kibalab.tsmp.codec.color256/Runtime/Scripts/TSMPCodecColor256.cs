@@ -110,6 +110,14 @@ namespace K13A.TSMP
         }
 #endif
 
+        public override void PrepareDecode(Texture source, Material material)
+        {
+            base.PrepareDecode(source, material);
+            // 검증에서 단일 샘플도 이득이 있었던 Robust Refine 모드에만 LUT를 사용한다.
+            if (material != null && material == robustRefineByteDecodeMaterial)
+                PrepareCalibrationLut(source, material, 276);
+        }
+
         public override void ApplyDecodeOptions()
         {
             bool robust = ReadCodecOptionFlag(0, false);
