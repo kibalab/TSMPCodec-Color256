@@ -2,6 +2,7 @@ Shader "Hidden/TSMP/Decode Color256 Robust Refine Bytes"
 {
     Properties
     {
+        [HideInInspector] _CalibrationLut ("Calibration LUT", 2D) = "black" {}
         _MainTex ("TSMP Source", 2D) = "black" {}
         _BlockSize ("Block Size", Float) = 8
         _SampleSize ("Sample Size", Float) = 0
@@ -30,52 +31,15 @@ Shader "Hidden/TSMP/Decode Color256 Robust Refine Bytes"
             #pragma target 3.5
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_local _ TSMP_CALIBRATION_LUT
             #include "Packages/com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeCommon.cginc"
 
             float _ColorCalibrationStartBlock;
             float _InterleaveMode;
 
-            int MakeColor256Symbol(int r, int g, int b)
-            {
-                return r | (g << 3) | (b << 6);
-            }
+            #include "Color256Calibration.cginc"
 
-            float ChannelValue(float3 c, int channel)
-            {
-                return channel == 0 ? c.r : channel == 1 ? c.g : c.b;
-            }
 
-            float AverageCalibrationChannel(int level, int channel)
-            {
-                float sum = 0.0;
-                int count = 0;
-
-                [loop]
-                for (int b = 0; b < 4; b++)
-                {
-                    [loop]
-                    for (int g = 0; g < 8; g++)
-                    {
-                        [loop]
-                        for (int r = 0; r < 8; r++)
-                        {
-                            bool include = false;
-                            if (channel == 0 && r == level) include = true;
-                            if (channel == 1 && g == level) include = true;
-                            if (channel == 2 && b == level) include = true;
-
-                            if (include)
-                            {
-                                int symbol = MakeColor256Symbol(r, g, b);
-                                sum += ChannelValue(SampleBlockByIndex(_ColorCalibrationStartBlock + symbol), channel);
-                                count++;
-                            }
-                        }
-                    }
-                }
-
-                return sum / max(1, count);
-            }
 
             int ClassifyChannelLevel(float value, int channel, int levelCount)
             {
@@ -119,7 +83,11 @@ Shader "Hidden/TSMP/Decode Color256 Robust Refine Bytes"
                             int g = clamp(g0 + dg, 0, 7);
                             int b = clamp(b0 + db, 0, 3);
                             int symbol = MakeColor256Symbol(r, g, b);
+#if defined(TSMP_CALIBRATION_LUT)
+                            float3 c = RgbToYCoCg(_CalibrationLut.Load(int3(symbol, 0, 0)).rgb);
+#else
                             float3 c = RgbToYCoCg(SampleBlockByIndex(_ColorCalibrationStartBlock + symbol));
+#endif
                             float3 d = p - c;
                             float distance = d.x * d.x * 2.0 + d.y * d.y * 0.85 + d.z * d.z * 0.85;
                             if (distance < bestDistance)
