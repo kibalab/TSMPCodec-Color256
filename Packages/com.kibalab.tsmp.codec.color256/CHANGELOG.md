@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.0.0
+
+Stable promotion of all 0.0.3-beta.1 through 0.0.3-beta.4 changes since 1.0.0. No runtime/shader changes from 0.0.3-beta.4.
+
+- Support ordinary Unity through UPM without VRCSDK/UdonSharp; retain Worlds SDK requirements in VPM only.
+- Use Core's shared automatic Controller workflow and an SDK-neutral codec prefab. Detect installed Worlds packages automatically without manual defines or a conversion menu.
+- Resolve shared shader includes through Packages/com.kibalab.tsmp.core for installed and local packages.
+- Regenerate Udon field metadata without legacy profiler fields while preserving the original program reference.
+- Prepare Float32 palette/channel calibration for Robust Refine, including single-sample decoding. Retain the original paths for other modes.
+- Bundle the preparation shader/material and retain ordinary decoding if preparation resources are unavailable with a compatible Core.
+- Write decoded header and payload bytes directly to Core's combined readback texture, removing a payload intermediate and packing draw while preserving the legacy path.
+- Require Core 1.0.0 in UPM and >=1.0.0 in VPM. Keep Worlds SDK >=3.9.0 VPM-only; ordinary Unity does not require VRCSDK.
+- Preserve codec IDs, protocol bytes, quantization behavior and existing asset GUIDs.
+- Update Japanese, English and Korean READMEs for stable installation, automatic setup and API compatibility; retain the beta history below.
+- Keep the historical 1.0.0 release intact; 2.0.0 adopts the current Core API baseline.
+- See [2.0.0 release notes](https://github.com/kibalab/TSMPCodec-Color256/releases/tag/v2.0.0) for the cumulative changes, validation evidence and remaining limits.
+
 ## 0.0.3-beta.4
 
 - Support Core's optional combined decoder output: write the decoded header prefix and payload into the readback texture directly, removing a payload intermediate and packing draw.
