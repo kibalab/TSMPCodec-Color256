@@ -2,6 +2,8 @@ Shader "Hidden/TSMP/Decode Color256 Robust Refine Bytes"
 {
     Properties
     {
+        [HideInInspector] _TSMPHeaderTex ("Decoded Header", 2D) = "black" {}
+        [HideInInspector] _TSMPHeaderPixels ("Header Pixels", Float) = 0
         [HideInInspector] _CalibrationLut ("Calibration LUT", 2D) = "black" {}
         _MainTex ("TSMP Source", 2D) = "black" {}
         _BlockSize ("Block Size", Float) = 8
