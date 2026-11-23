@@ -14,6 +14,8 @@ namespace K13A.TSMP
         public Material robustByteDecodeMaterial;
         public Material robustRefineByteDecodeMaterial;
         public Material[] debugMaterials;
+        [Tooltip("Use four bilinear reads for native-resolution 4x4 receive samples. Other footprints keep the standard sampler.")]
+        public bool useBilinear4;
 
 #if !COMPILER_UDONSHARP
         public override int SymbolMode => SymbolModeColor256;
@@ -113,8 +115,11 @@ namespace K13A.TSMP
         public override void PrepareDecode(Texture source, Material material)
         {
             base.PrepareDecode(source, material);
+            if (material == null)
+                return;
+            material.SetFloat("_UseBilinear4", useBilinear4 ? 1f : 0f);
             // 검증에서 단일 샘플도 이득이 있었던 Robust Refine 모드에만 LUT를 사용한다.
-            if (material != null && material == robustRefineByteDecodeMaterial)
+            if (material == robustRefineByteDecodeMaterial)
                 PrepareCalibrationLut(source, material, 276);
         }
 
