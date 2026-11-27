@@ -3,6 +3,7 @@ Shader "Hidden/TSMP/Debug Color256 Calibration"
     Properties
     {
         _MainTex ("TSMP Source", 2D) = "black" {}
+        [HideInInspector] _SampleSize ("Sample Size", Float) = 0
         _BlockSize ("Block Size", Float) = 8
         _ActiveWidthBlocks ("Active Width Blocks", Float) = 160
         _SourceWidth ("Source Width", Float) = 1280
@@ -27,38 +28,10 @@ Shader "Hidden/TSMP/Debug Color256 Calibration"
             #pragma target 3.5
             #pragma vertex vert
             #pragma fragment frag
-            #include "UnityCG.cginc"
-
-            Texture2D _MainTex;
-            SamplerState sampler_MainTex;
-            float _BlockSize;
-            float _ActiveWidthBlocks;
-            float _SourceWidth;
-            float _SourceHeight;
-            float _FlipY;
+            #include "Packages/com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeCommon.cginc"
             float _ColorCalibrationStartBlock;
             float _GridOpacity;
             float _LineWidth;
-
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f
-            {
-                float4 pos : SV_POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            v2f vert(appdata v)
-            {
-                v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
-                return o;
-            }
 
             static const float kPad        = 0.018;
             static const float kGap        = 0.014;
@@ -74,43 +47,6 @@ Shader "Hidden/TSMP/Debug Color256 Calibration"
             static const float3 kAxisColor = float3(0.55, 0.57, 0.66);
 
             int MakeColor256Symbol(int r, int g, int b) { return r | (g << 3) | (b << 6); }
-
-            float3 SampleRgbAtTopLeftPixel(float2 pixel)
-            {
-                float rawY = (pixel.y + 0.5) / _SourceHeight;
-                float uvY = lerp(rawY, 1.0 - rawY, _FlipY);
-                float2 uv = float2((pixel.x + 0.5) / _SourceWidth, uvY);
-                return _MainTex.SampleLevel(sampler_MainTex, uv, 0.0).rgb;
-            }
-
-            float3 SampleBlockRgb(float blockX, float blockY)
-            {
-                float sampleSize = _BlockSize >= 8.0 ? 4.0 : 3.0;
-                int sampleLimit = (int)sampleSize;
-                float startOffset = floor((_BlockSize - sampleSize) * 0.5);
-                float2 startPixel = float2(blockX, blockY) * _BlockSize + startOffset.xx;
-                float3 sum = 0.0;
-
-                [unroll]
-                for (int y = 0; y < 4; y++)
-                {
-                    [unroll]
-                    for (int x = 0; x < 4; x++)
-                    {
-                        if (x < sampleLimit && y < sampleLimit)
-                            sum += SampleRgbAtTopLeftPixel(startPixel + float2(x, y));
-                    }
-                }
-
-                return sum / (sampleLimit * sampleLimit);
-            }
-
-            float3 SampleBlockByIndex(float blockIndex)
-            {
-                float blockX = fmod(blockIndex, _ActiveWidthBlocks);
-                float blockY = floor(blockIndex / _ActiveWidthBlocks);
-                return SampleBlockRgb(blockX, blockY);
-            }
 
             float ChannelValue(float3 c, int channel)
             {
@@ -317,7 +253,7 @@ Shader "Hidden/TSMP/Debug Color256 Calibration"
 
                     color = lerp(color, kAxisColor, IdealLineMask(g) * 0.55);
 
-                    [unroll]
+                    [loop]
                     for (int ch = 0; ch < 3; ch++)
                     {
                         float curveMask = CurveLineMask(g, ch);

@@ -4,6 +4,7 @@ Shader "Hidden/TSMP/Decode Color256 Bytes"
     {
         [HideInInspector] _TSMPHeaderTex ("Decoded Header", 2D) = "black" {}
         [HideInInspector] _TSMPHeaderPixels ("Header Pixels", Float) = 0
+        [HideInInspector] _UseBilinear4 ("Bilinear 4x4 sampling", Float) = 0
         _MainTex ("TSMP Source", 2D) = "black" {}
         _BlockSize ("Block Size", Float) = 8
         _SampleSize ("Sample Size", Float) = 0
@@ -32,10 +33,11 @@ Shader "Hidden/TSMP/Decode Color256 Bytes"
             #pragma target 3.5
             #pragma vertex vert
             #pragma fragment frag
+            #define TSMP_ENABLE_RGB_BOX4
             #include "Packages/com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeCommon.cginc"
 
             float _ColorCalibrationStartBlock;
-            float _InterleaveMode;
+            #include "Color256Payload.cginc"
 
             int ClassifyColor256(float3 rgb)
             {
@@ -64,15 +66,7 @@ Shader "Hidden/TSMP/Decode Color256 Bytes"
                 if (byteIndex < 0 || byteIndex >= (int)_ByteCount)
                     return 0;
 
-                float blockOffset = byteIndex;
-                if (_InterleaveMode > 0.5)
-                {
-                    float rows = ceil(_ByteCount / _ActiveWidthBlocks);
-                    float logicalByte = (float)byteIndex;
-                    blockOffset = fmod(logicalByte, rows) * _ActiveWidthBlocks + floor(logicalByte / rows);
-                }
-
-                return ClassifyColor256(SampleBlockByIndex(_StartBlock + blockOffset));
+                return ClassifyColor256(SampleBlockByIndex(Color256PayloadBlock((uint)byteIndex)));
             }
 
             #include "Packages/com.kibalab.tsmp.core/Runtime/Codecs/Common/Shaders/cgincs/TSMPDecodeByteOutput.cginc"

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.1.0
+
+- Use integer block indices for interleaved symbols in Direct, Robust and Robust Refine modes.
+- Keep LUT preparation specific to Robust Refine; there is no single-sample LUT preference in this codec.
+- Add optional four-tap bilinear sampling for eligible native-resolution 4x4 footprints on Core 1.1.0. It is off by default; Core 1.0.0 and other footprints use ordinary sampling.
+- Bundle the compiled Udon program rather than referencing a project-generated asset. Existing script and source program GUIDs are preserved.
+- Declare the default Luma4 header codec as a package dependency.
+- Core 1.0.0 and 1.1.0 supported; codec ID and sender wire format unchanged.
+
 ## 2.0.0
 
 Stable promotion of all 0.0.3-beta.1 through 0.0.3-beta.4 changes since 1.0.0. No runtime/shader changes from 0.0.3-beta.4.
